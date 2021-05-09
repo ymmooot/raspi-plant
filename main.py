@@ -10,7 +10,7 @@ MOISUTURE_SENSOR_INPUT = 0 # A0
 BUTTON_INPUT = 2 # D2
 
 MOISUTURE_SENSOR_INTERVAL_SEC = 3
-MOISUTURE_SENSOR_MAX_VOLT = 704
+MOISUTURE_SENSOR_MAX_VOLT = 670
 
 i2c = board.I2C()
 oled = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c, addr=0x3c)
@@ -47,7 +47,7 @@ def water(val):
     GPIO.output(WATER_PUMP_GPIO_OUT, GPIO.HIGH)
 
 def readMoistureSensor(is_watering):
-  moisuture = grovepi.analogRead(MOISUTURE_SENSOR_INPUT)
+  moisuture = min(grovepi.analogRead(MOISUTURE_SENSOR_INPUT), MOISUTURE_SENSOR_MAX_VOLT)
   percentage = round(moisuture / MOISUTURE_SENSOR_MAX_VOLT * 100)
   percentage = min([percentage, 100])  
   draw_display(percentage, is_watering)
@@ -76,7 +76,7 @@ while True:
         readMoistureSensor(is_watering)
         water(False)
       
-      time.sleep(1)
+      time.sleep(0.1)
     except KeyboardInterrupt:
       break    
 GPIO.cleanup()
