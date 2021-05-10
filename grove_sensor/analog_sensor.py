@@ -1,5 +1,5 @@
 from grove_sensor.sensor import Sensor
-import grovepi
+from grove_sensor import grovepi
 
 class AnalogSensor(Sensor):
   def __init__(self, pin, pin_mode):

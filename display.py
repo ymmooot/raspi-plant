@@ -1,4 +1,4 @@
-import board
+import board 
 from grove_sensor.sensor import Sensor
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306

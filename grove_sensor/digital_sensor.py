@@ -1,5 +1,5 @@
 from grove_sensor.sensor import Sensor
-import grovepi
+from grove_sensor import grovepi
 
 class DigitalSensor(Sensor):
   def __init__(self, pin, pin_mode):
