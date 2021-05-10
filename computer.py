@@ -13,5 +13,8 @@ class ComputerInfo(WatcherItem):
   def cpu(self):
     return psutil.cpu_percent()
 
+  def cpu_temp(self):
+    return psutil.sensors_temperatures()['cpu_thermal'][0].current    
+
   def read(self):
-    return (self.cpu(), self.memory())
+    return (self.cpu(), self.memory(), self.cpu_temp())

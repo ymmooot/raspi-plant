@@ -57,8 +57,9 @@ def setup():
 
   @computer.on('change')
   def computer_info_handler(val):
-    cpu, mem = val
-    display.draw(f'Computer Resources\nCPU: {cpu}%|MEM: {mem}%')
+    cpu, mem, temp = val
+    temp = round(temp)       
+    display.draw(f'CPU: {cpu}% {temp}C\nMEM: {mem}%')
 
     
 

@@ -1,4 +1,5 @@
 import asyncio
+import sys
 
 MAX_SENSOR_LIMIT = 10
 
@@ -14,7 +15,11 @@ class Watcher(object):
   async def worker(self):
     while True:
       (watch_func, delay) = await self.queue.get()
-      await watch_func(delay)
+      try:
+        await watch_func(delay)
+      except Exception as e:
+        print('other error', e)
+        sys.exit(1)
       self.queue.task_done()
   
   def init(self): 
