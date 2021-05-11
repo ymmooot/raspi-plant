@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 88
+filename = *.py
+exclude = __init__.py,src/grove_sensor/grovepi.py
