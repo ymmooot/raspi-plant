@@ -20,7 +20,7 @@ class DigitalButton(DigitalSensor):
     if val == 1 and self.mode is ButtonInputType.UP:
       self.mode = ButtonInputType.DOWN
       self.pressed_at = time.time()
-      self.emit('down', 0)
+      self.emit('down')
       return
 
     # user continues to press the button
