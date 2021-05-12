@@ -1,11 +1,9 @@
 import time
 
-from computer import ComputerInfo
-from display import Display
-from grove_sensor.analog_sensor import AnalogSensor
 from grove_sensor.digital_button import DigitalButton
+from grove_sensor.moisture_sensor import MoistureSensor
 from mode import Mode
-from pump import Pump
+from modules import ComputerInfo, Display, Pump
 from watcher import Watcher
 
 WATER_PUMP_GPIO_OUT = 25
@@ -13,10 +11,10 @@ MOISTURE_SENSOR_INPUT = 0  # A0
 BUTTON_INPUT = 2  # D2
 DISPLAY_ADDR = 0x3C
 
-MOISTURE_SENSOR_MAX_VOLT = 670
 MOISTURE_SENSOR_DELAY = 2
 COMPUTER_INFO_DELAY = 3
 LONG_PRESS_THRESHOLD = 0.7
+MOISTURE_SENSOR_MAX_VOLT = 670
 
 
 def setup_modules(feature_mode):
@@ -25,7 +23,7 @@ def setup_modules(feature_mode):
     display = Display(DISPLAY_ADDR)
     water = Pump(WATER_PUMP_GPIO_OUT)
 
-    moisuture = AnalogSensor(MOISTURE_SENSOR_INPUT, "INPUT")
+    moisuture = MoistureSensor(MOISTURE_SENSOR_INPUT, MOISTURE_SENSOR_MAX_VOLT)
     computer = ComputerInfo()
     if feature_mode is Mode.MOISTURE:
         moisuture.watch(MOISTURE_SENSOR_DELAY)
@@ -33,12 +31,6 @@ def setup_modules(feature_mode):
         computer.watch(COMPUTER_INFO_DELAY)
 
     return (moisuture, button, display, computer, water)
-
-
-def calc_moisture_rate(val):
-    m = min(val, MOISTURE_SENSOR_MAX_VOLT)
-    percentage = round(m / MOISTURE_SENSOR_MAX_VOLT * 100)
-    return min(percentage, 100)
 
 
 def setup():
@@ -82,10 +74,9 @@ def setup():
                     water.toggle(True)
                 time.sleep(0.1)
 
-    @moisuture.on("change")
+    @moisuture.on("change-percent")
     def moisutureSensorHandler(val):
-        m = calc_moisture_rate(val)
-        display.draw(f"Moisture: {m}%")
+        display.draw(f"Moisture: {val}%")
 
     @computer.on("change")
     def computer_info_handler(val):

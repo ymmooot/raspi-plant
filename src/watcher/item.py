@@ -27,6 +27,7 @@ class WatcherItem(EventEmitter):
         w.append((self._watch, delay))
 
     async def _watch(self, delay):
+        self.emit("change", self.read())
         while self.is_watching:
             self.current_value = self.read()
             if self.current_value != self.last_value:
